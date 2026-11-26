@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouShield AI | Protótipo Interativo YouShop 2027</title>
+    <style>
+        :root {
+            --navy: #0F1F3D;
+            --navy-light: #182E57;
+            --lime: #A3E635;
+            --lime-dark: #84CC16;
+            --bg: #F4F6F9;
+            --card: #FFFFFF;
+            --text: #1E293B;
+            --muted: #64748B;
+            --border: #E2E8F0;
+            --green: #16A34A;
+            --green-bg: #DCFCE7;
+            --amber: #D97706;
+            --amber-bg: #FEF3C7;
+            --red: #DC2626;
+            --red-bg: #FEE2E2;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            padding: 24px;
+        }
+
+        .container {
+            max-width: 1180px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background-color: var(--navy);
+            color: white;
+            padding: 24px 28px;
+            border-radius: 12px;
+            border-left: 6px solid var(--lime);
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .header h1 {
+            color: var(--lime);
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .header p {
+            color: #CBD5E1;
+            font-size: 0.92rem;
+        }
+
+        .badge-mcp {
+            background: rgba(163, 230, 53, 0.15);
+            border: 1px solid var(--lime);
+            color: var(--lime);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 340px 1fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 900px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .panel {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 22px;
+            border: 1px solid var(--border);
+            box-shadow: 0 2px 8px rgba(15, 31, 61, 0.04);
+        }
+
+        .panel h2 {
+            font-size: 1.05rem;
+            color: var(--navy);
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .scenario-btn {
+            width: 100%;
+            text-align: left;
+            padding: 12px 14px;
+            margin-bottom: 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: #F8FAFC;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--navy);
+        }
+
+        .scenario-btn:hover {
+            border-color: var(--navy);
+            background: #F1F5F9;
+        }
+
+        .scenario-btn.active {
+            background: var(--navy);
+            color: white;
+            border-color: var(--navy);
+        }
+
+        .scenario-btn span {
+            display: block;
+            font-size: 0.78rem;
+            font-weight: 400;
+            opacity: 0.85;
+            margin-top: 2px;
+        }
+
+        .controls {
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .control-group {
+            margin-bottom: 14px;
+        }
+
+        .control-group label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 4px;
+        }
+
+        .control-group input[type="range"] {
+            width: 100%;
+            accent-color: var(--navy);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin-top: 12px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            background: #F8FAFC;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .metrics-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 700px) {
+            .metrics-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .metric-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px;
+        }
+
+        .metric-card .label {
+            font-size: 0.78rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            font-weight: 600;
+        }
+
+        .metric-card .value {
+            font-size: 1.55rem;
+            font-weight: 800;
+            color: var(--navy);
+            margin-top: 4px;
+        }
+
+        .decision-banner {
+            padding: 18px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .decision-green { background: var(--green-bg); border-left: 5px solid var(--green); color: #14532D; }
+        .decision-amber { background: var(--amber-bg); border-left: 5px solid var(--amber); color: #78350F; }
+        .decision-red { background: var(--red-bg); border-left: 5px solid var(--red); color: #7F1D1D; }
+
+        .decision-banner h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .xai-list {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .xai-list li {
+            background: #F8FAFC;
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--navy);
+            padding: 12px 14px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-size: 0.92rem;
+        }
+
+        .mcp-trace {
+            background: #0F172A;
+            color: #E2E8F0;
+            padding: 14px 16px;
+            border-radius: 8px;
+            font-family: "Courier New", Courier, monospace;
+            font-size: 0.82rem;
+            margin-bottom: 20px;
+            overflow-x: auto;
+        }
+
+        .mcp-trace .tag {
+            color: var(--lime);
+            font-weight: bold;
+        }
+
+        .hitl-box {
+            border-top: 1px solid var(--border);
+            padding-top: 16px;
+            margin-top: 16px;
+        }
+
+        .hitl-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .btn-action {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.88rem;
+            cursor: pointer;
+        }
+
+        .btn-approve { background: var(--green); color: white; }
+        .btn-verify { background: var(--amber); color: white; }
+        .btn-block { background: var(--red); color: white; }
+
+        .feedback-msg {
+            margin-top: 12px;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            background: #EFF6FF;
+            color: #1E40AF;
+            display: none;
+        }
+
+        .chart-bars {
+            display: flex;
+            align-items: flex-end;
+            gap: 14px;
+            height: 140px;
+            padding: 16px 10px 0 10px;
+            border-bottom: 2px solid var(--border);
+            margin-bottom: 8px;
+        }
+
+        .bar-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100%;
+            justify-content: flex-end;
+        }
+
+        .bar-fill {
+            width: 100%;
+            max-width: 42px;
+            background: var(--navy);
+            border-radius: 6px 6px 0 0;
+            transition: height 0.3s ease;
+        }
+
+        .bar-fill.spike {
+            background: var(--lime-dark);
+        }
+
+        .bar-label {
+            font-size: 0.75rem;
+            color: var(--muted);
+            margin-top: 6px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1>🛡️ YouShield AI — Motor Preditivo de Risco & Comissões</h1>
+                <p>Protótipo Interativo · Desafio de Inovação YouShop 2027 | Autor: Caliu Muriell</p>
+            </div>
+            <div class="badge-mcp">⚡ Conectado via MCP (Checkout + Grafos + Financeiro)</div>
+        </div>
+
+        <div class="grid">
+            <!-- Coluna Esquerda: Controles -->
+            <div class="panel">
+                <h2>🎛️ Cenários do Ecossistema</h2>
+                <button class="scenario-btn active" id="btn-c1" onclick="setScenario(1)">
+                    1. Creator Viral Legítimo
+                    <span>Pico orgânico após vídeo viral (Baixo Risco)</span>
+                </button>
+                <button class="scenario-btn" id="btn-c2" onclick="setScenario(2)">
+                    2. Creator Iniciante em Escala
+                    <span>Conta recente com bom volume (Risco Moderado)</span>
+                </button>
+                <button class="scenario-btn" id="btn-c3" onclick="setScenario(3)">
+                    3. Rede de Auto-Indicação Suspeita
+                    <span>Mesma origem/dispositivo e alto estorno (Alto Risco)</span>
+                </button>
+
+                <div class="controls">
+                    <h2>⚙️ Parâmetros em Tempo Real</h2>
+                    <div class="control-group">
+                        <label>Vendas na última 1h <span id="val-vendas">85</span></label>
+                        <input type="range" id="in-vendas" min="1" max="150" value="85" oninput="recalculate()">
+                    </div>
+                    <div class="control-group">
+                        <label>Dispositivos Únicos (%) <span id="val-disp">98%</span></label>
+                        <input type="range" id="in-disp" min="10" max="100" value="98" oninput="recalculate()">
+                    </div>
+                    <div class="control-group">
+                        <label>Idade da Conta (dias) <span id="val-idade">240</span></label>
+                        <input type="range" id="in-idade" min="1" max="365" value="240" oninput="recalculate()">
+                    </div>
+                    <div class="control-group">
+                        <label>Taxa de Reembolso Produto (%) <span id="val-reemb">1.8%</span></label>
+                        <input type="range" id="in-reemb" min="0" max="30" step="0.5" value="1.8" oninput="recalculate()">
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="in-grafo" onchange="recalculate()">
+                        <label for="in-grafo">Grafo (GNN) detectou conexão IP/Dispositivo entre Creator e Compradores</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Coluna Direita: Resultados -->
+            <div>
+                <div class="metrics-row">
+                    <div class="metric-card">
+                        <div class="label">Score YouShield</div>
+                        <div class="value" id="out-score">10 / 100</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="label">Faixa de Risco</div>
+                        <div class="value" id="out-faixa" style="font-size: 1.15rem;">VERDE</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="label">Dispositivos Únicos</div>
+                        <div class="value" id="out-disp">98%</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="label">Vendas (1h)</div>
+                        <div class="value" id="out-vendas">85</div>
+                    </div>
+                </div>
+
+                <div id="decision-box" class="decision-banner decision-green">
+                    <div>
+                        <small style="font-weight:700; text-transform:uppercase;">Decisão Automatizada do Motor</small>
+                        <h3 id="out-acao">✅ Saque Rápido Liberado Automaticamente</h3>
+                    </div>
+                    <div style="font-size: 0.85rem; font-weight: 600;">Latência MCP: 42ms</div>
+                </div>
+
+                <div class="panel" style="margin-bottom: 20px;">
+                    <h2>🧠 Explicabilidade da IA (XAI) — Diagnóstico em Tempo Real</h2>
+                    <ul class="xai-list" id="out-razoes"></ul>
+
+                    <h2>🔌 Telemetria do Agente via MCP (Model Context Protocol)</h2>
+                    <div class="mcp-trace" id="out-mcp"></div>
+
+                    <h2>📊 Curva de Conversão nas Últimas 6 Horas</h2>
+                    <div class="chart-bars" id="out-chart"></div>
+
+                    <div class="hitl-box" id="hitl-section" style="display:none;">
+                        <h2 style="border:none; margin-bottom:4px; padding:0;">👩‍💻 Ação do Analista de Operações (Human-in-the-Loop)</h2>
+                        <p style="font-size:0.85rem; color:var(--muted);">Alertas vermelhos nunca bloqueiam definitivamente sem supervisão humana:</p>
+                        <div class="hitl-actions">
+                            <button class="btn-action btn-approve" onclick="analystAction('Comissão liberada manualmente e feedback enviado para retreino do modelo.')">Aprovar Liberação Manual</button>
+                            <button class="btn-action btn-verify" onclick="analystAction('Solicitação de validação adicional enviada ao creator antes do saque.')">Solicitar Verificação</button>
+                            <button class="btn-action btn-block" onclick="analystAction('Repasse retido preventivamente e padrão registrado no grafo antifraude.')">Confirmar Fraude / Reter</button>
+                        </div>
+                        <div class="feedback-msg" id="analyst-feedback"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function setScenario(num) {
+            document.querySelectorAll('.scenario-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('btn-c' + num).classList.add('active');
+            document.getElementById('analyst-feedback').style.display = 'none';
+
+            if (num === 1) {
+                document.getElementById('in-vendas').value = 85;
+                document.getElementById('in-disp').value = 98;
+                document.getElementById('in-idade').value = 240;
+                document.getElementById('in-reemb').value = 1.8;
+                document.getElementById('in-grafo').checked = false;
+            } else if (num === 2) {
+                document.getElementById('in-vendas').value = 18;
+                document.getElementById('in-disp').value = 92;
+                document.getElementById('in-idade').value = 12;
+                document.getElementById('in-reemb').value = 4.5;
+                document.getElementById('in-grafo').checked = false;
+            } else if (num === 3) {
+                document.getElementById('in-vendas').value = 42;
+                document.getElementById('in-disp').value = 24;
+                document.getElementById('in-idade').value = 5;
+                document.getElementById('in-reemb').value = 19.0;
+                document.getElementById('in-grafo').checked = true;
+            }
+            recalculate();
+        }
+
+        function recalculate() {
+            const vendas = parseInt(document.getElementById('in-vendas').value);
+            const disp = parseInt(document.getElementById('in-disp').value);
+            const idade = parseInt(document.getElementById('in-idade').value);
+            const reemb = parseFloat(document.getElementById('in-reemb').value);
+            const grafo = document.getElementById('in-grafo').checked;
+
+            document.getElementById('val-vendas').innerText = vendas;
+            document.getElementById('val-disp').innerText = disp + '%';
+            document.getElementById('val-idade').innerText = idade;
+            document.getElementById('val-reemb').innerText = reemb.toFixed(1) + '%';
+
+            let score = 10;
+            let razoes = [];
+
+            if (disp < 50) {
+                score += 35;
+                razoes.push(`Baixa diversidade de dispositivos (${disp}% únicos) — forte indício de compras repetidas na mesma origem.`);
+            } else if (disp < 80) {
+                score += 15;
+                razoes.push(`Diversidade moderada de dispositivos (${disp}% únicos) exige acompanhamento.`);
+            }
+
+            if (grafo) {
+                score += 30;
+                razoes.push(`Análise de Grafos (GNN) identificou compartilhamento de rede/dispositivo entre o link do creator e os compradores.`);
+            }
+
+            if (reemb > 10) {
+                score += 20;
+                razoes.push(`Produto possui histórico elevado de estornos/chargebacks (${reemb.toFixed(1)}%).`);
+            } else if (reemb > 5) {
+                score += 8;
+                razoes.push(`Taxa de reembolso do produto em faixa de atenção (${reemb.toFixed(1)}%).`);
+            }
+
+            if (idade < 15 && vendas > 15) {
+                score += 12;
+                razoes.push(`Conta recente (${idade} dias) com aceleração brusca de volume (${vendas} vendas/h).`);
+            }
+
+            if (disp >= 90 && !grafo && reemb < 4) {
+                razoes.push(`Padrão orgânico consistente: alta dispersão de dispositivos (${disp}%) e histórico saudável do produto.`);
+            }
+
+            score = Math.min(Math.max(score, 5), 99);
+
+            document.getElementById('out-score').innerText = `${score} / 100`;
+            document.getElementById('out-disp').innerText = `${disp}%`;
+            document.getElementById('out-vendas').innerText = vendas;
+
+            const box = document.getElementById('decision-box');
+            const hitl = document.getElementById('hitl-section');
+            box.className = 'decision-banner';
+
+            if (score <= 30) {
+                box.classList.add('decision-green');
+                document.getElementById('out-faixa').innerText = 'VERDE · Baixo';
+                document.getElementById('out-acao').innerText = '✅ Saque Rápido Liberado Automaticamente';
+                hitl.style.display = 'none';
+            } else if (score <= 70) {
+                box.classList.add('decision-amber');
+                document.getElementById('out-faixa').innerText = 'AMARELA · Moderado';
+                document.getElementById('out-acao').innerText = '⏳ Liberação na Janela Padrão (D+14)';
+                hitl.style.display = 'none';
+            } else {
+                box.classList.add('decision-red');
+                document.getElementById('out-faixa').innerText = 'VERMELHA · Alto';
+                document.getElementById('out-acao').innerText = '🛑 Retenção Preventiva + Fila Prioritária de Operações';
+                hitl.style.display = 'block';
+            }
+
+            const ul = document.getElementById('out-razoes');
+            ul.innerHTML = razoes.map(r => `<li>${r}</li>`).join('');
+
+            document.getElementById('out-mcp').innerHTML = `
+                <div><span class="tag">[MCP-TOOL: checkout.get_device_entropy]</span> -> unique_ratio=${(disp/100).toFixed(2)}, velocity_1h=${vendas}</div>
+                <div><span class="tag">[MCP-TOOL: graph.check_creator_links]</span> -> collision_detected=${grafo}, account_age_days=${idade}</div>
+                <div><span class="tag">[MCP-TOOL: finance.get_product_risk]</span> -> chargeback_rate=${reemb.toFixed(1)}%, computed_score=${score}</div>
+            `;
+
+            const horas = ['08h', '09h', '10h', '11h', '12h', '13h'];
+            const vals = [6, 8, 11, 14, vendas, Math.max(4, Math.round(vendas * 0.88))];
+            const maxVal = Math.max(...vals, 20);
+            document.getElementById('out-chart').innerHTML = horas.map((h, i) => {
+                const pct = Math.round((vals[i] / maxVal) * 100);
+                const isSpike = i >= 4;
+                return `
+                    <div class="bar-col">
+                        <div class="bar-fill ${isSpike ? 'spike' : ''}" style="height: ${pct}%;" title="${vals[i]} vendas"></div>
+                        <div class="bar-label">${h}<br><strong>${vals[i]}</strong></div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function analystAction(msg) {
+            const el = document.getElementById('analyst-feedback');
+            el.innerText = '✔️ Ação registrada: ' + msg;
+            el.style.display = 'block';
+        }
+
+        recalculate();
+    </script>
+</body>
+</html>
